@@ -3,6 +3,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.*;
 import java.util.stream.Collectors;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 
 public class BytePairEncoding {
 
@@ -92,7 +95,7 @@ public class BytePairEncoding {
                 List<String> newWord = new ArrayList<>();
                 for (int i = 0; i < word.length; ) {
                     // find the first occurrence of the pair
-                    int j = Arrays.asList(word).indexOf(first, i);
+                    int j = indexOf(word, first, i);
                     if (j == -1) {
                         newWord.addAll(Arrays.asList(word).subList(i, word.length)); // add remaining characters
                         break;
@@ -144,6 +147,14 @@ public class BytePairEncoding {
                     .collect(Collectors.joining());
         }
     }
+    private static int indexOf(String[] array, String element, int startIndex) {
+        for (int i = startIndex; i < array.length; i++) {
+            if (array[i].equals(element)) {
+                return i;
+            }
+        }
+        return -1;
+    }    
 
     // utility method to load an encoder from files
     public static Encoder getEncoder(String modelName, String modelsDir) throws IOException {

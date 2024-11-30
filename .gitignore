@@ -2,8 +2,10 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-
+models/gpt2/encoder.json
+models/gpt2/vocab.bpe
 ### Eclipse ###
+gpt2_weights.json
 .apt_generated
 .classpath
 .factorypath

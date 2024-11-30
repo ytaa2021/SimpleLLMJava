@@ -11,7 +11,14 @@ public class LayerNorm {
             this.shift.getData()[0][i] = 0.0;
         }
     }
-
+    public void setScale(double[] scaleData) {
+        this.scale.setData(new double[][] { scaleData });
+    }
+    
+    public void setShift(double[] shiftData) {
+        this.shift.setData(new double[][] { shiftData });
+    }
+    
     public Matrix forward(Matrix x) {
         Matrix mean = x.mean(-1);
         Matrix variance = x.variance(-1, false);
