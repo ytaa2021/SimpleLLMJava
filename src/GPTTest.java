@@ -37,7 +37,7 @@ public class GPTTest {
             while (true) {
                 System.out.print("Enter a prompt: ");
                 String inputText = scanner.nextLine(); // Read the user input
-                System.out.print("Enter a prompt: ");
+                System.out.print("Enter a number of tokens to generate: ");
                 String TokensToGenerate = scanner.nextLine(); // Read the user input
                 int numTokensToGenerate;
                 try {
