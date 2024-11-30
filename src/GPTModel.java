@@ -73,23 +73,23 @@ public class GPTModel {
             int vocabSize = this.vocabSize;
             int embDim = this.embDim;
             double[][] tokenEmbeddingWeights = WeightsLoader.to2DDoubleArray(
-                weightsMap.get("transformer.wte.weight"), vocabSize, embDim
+                weightsMap.get("wte.weight"), vocabSize, embDim
             );
             this.tokenEmbedding.setData(tokenEmbeddingWeights);
     
             System.out.println("Loading position embedding weights...");
             int maxPositionEmbeddings = this.contextLength;
             double[][] positionEmbeddingWeights = WeightsLoader.to2DDoubleArray(
-                weightsMap.get("transformer.wpe.weight"), maxPositionEmbeddings, embDim
+                weightsMap.get("wpe.weight"), maxPositionEmbeddings, embDim
             );
             this.positionEmbedding.setData(positionEmbeddingWeights);
     
             System.out.println("Loading final LayerNorm weights...");
             double[] ln_f_weight = WeightsLoader.toDoubleArray(
-                weightsMap.get("transformer.ln_f.weight"), embDim
+                weightsMap.get("ln_f.weight"), embDim
             );
             double[] ln_f_bias = WeightsLoader.toDoubleArray(
-                weightsMap.get("transformer.ln_f.bias"), embDim
+                weightsMap.get("ln_f.bias"), embDim
             );
             this.finalLayerNorm.setScale(ln_f_weight);
             this.finalLayerNorm.setShift(ln_f_bias);
@@ -99,54 +99,54 @@ public class GPTModel {
                 TransformerBlock block = this.transformerBlocks[i];
     
                 double[] ln1_weight = WeightsLoader.toDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".ln_1.weight"), embDim
+                    weightsMap.get("h." + i + ".ln_1.weight"), embDim
                 );
                 double[] ln1_bias = WeightsLoader.toDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".ln_1.bias"), embDim
+                    weightsMap.get("h." + i + ".ln_1.bias"), embDim
                 );
                 block.norm1.setScale(ln1_weight);
                 block.norm1.setShift(ln1_bias);
     
                 double[][] c_attn_weight = WeightsLoader.to2DDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".attn.c_attn.weight"), embDim, embDim * 3
+                    weightsMap.get("h." + i + ".attn.c_attn.weight"), embDim, embDim * 3
                 );
                 double[] c_attn_bias = WeightsLoader.toDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".attn.c_attn.bias"), embDim * 3
+                    weightsMap.get("h." + i + ".attn.c_attn.bias"), embDim * 3
                 );
                 block.attention.loadCattnWeights(c_attn_weight, c_attn_bias);
     
                 double[][] c_proj_weight = WeightsLoader.to2DDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".attn.c_proj.weight"), embDim, embDim
+                    weightsMap.get("h." + i + ".attn.c_proj.weight"), embDim, embDim
                 );
                 double[] c_proj_bias = WeightsLoader.toDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".attn.c_proj.bias"), embDim
+                    weightsMap.get("h." + i + ".attn.c_proj.bias"), embDim
                 );
                 block.attention.outProj.setWeights(c_proj_weight);
                 block.attention.outProj.setBias(c_proj_bias);
     
                 double[] ln2_weight = WeightsLoader.toDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".ln_2.weight"), embDim
+                    weightsMap.get("h." + i + ".ln_2.weight"), embDim
                 );
                 double[] ln2_bias = WeightsLoader.toDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".ln_2.bias"), embDim
+                    weightsMap.get("h." + i + ".ln_2.bias"), embDim
                 );
                 block.norm2.setScale(ln2_weight);
                 block.norm2.setShift(ln2_bias);
     
                 double[][] fc1_weight = WeightsLoader.to2DDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".mlp.c_fc.weight"), embDim, embDim * 4
+                    weightsMap.get("h." + i + ".mlp.c_fc.weight"), embDim, embDim * 4
                 );
                 double[] fc1_bias = WeightsLoader.toDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".mlp.c_fc.bias"), embDim * 4
+                    weightsMap.get("h." + i + ".mlp.c_fc.bias"), embDim * 4
                 );
                 block.feedForward.fc1.setWeights(fc1_weight);
                 block.feedForward.fc1.setBias(fc1_bias);
     
                 double[][] fc2_weight = WeightsLoader.to2DDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".mlp.c_proj.weight"), embDim * 4, embDim
+                    weightsMap.get("h." + i + ".mlp.c_proj.weight"), embDim * 4, embDim
                 );
                 double[] fc2_bias = WeightsLoader.toDoubleArray(
-                    weightsMap.get("transformer.h." + i + ".mlp.c_proj.bias"), embDim
+                    weightsMap.get("h." + i + ".mlp.c_proj.bias"), embDim
                 );
                 block.feedForward.fc2.setWeights(fc2_weight);
                 block.feedForward.fc2.setBias(fc2_bias);

@@ -355,10 +355,8 @@ public class Matrix {
         }
         Matrix result = new Matrix(m.rows, m.cols);
         for (int i = 0; i < m.rows; i++) {
-            double[] mRow = m.data[i];
-            double[] maskRow = mask.data[i];
             for (int j = 0; j < m.cols; j++) {
-                result.data[i][j] = maskRow[j] == 0 ? -1e9 : mRow[j];
+                result.data[i][j] = mask.data[i][j] == 0 ? m.data[i][j] : -1e9;
             }
         }
         return result;

@@ -138,13 +138,39 @@ public class BytePairEncoding {
 
         // method to decode BPE tokens back into text
         public String decode(List<Integer> tokens) {
-            String text = tokens.stream()
-                    .map(decoder::get)
-                    .collect(Collectors.joining()); // decode tokens into text
-            return text.chars()
-                    .mapToObj(c -> byteDecoder.get((char) c)) // decode bytes back to original characters
-                    .map(String::valueOf)
-                    .collect(Collectors.joining());
+            // Step 1: Map token IDs to BPE tokens
+            StringBuilder bpeTokensBuilder = new StringBuilder();
+            for (Integer token : tokens) {
+                String bpeToken = decoder.get(token);
+                if (bpeToken == null) {
+                    System.err.println("Warning: Token ID " + token + " not found in decoder.");
+                    continue; // Skip unknown tokens
+                }
+                bpeTokensBuilder.append(bpeToken);
+            }
+            // Step 2: Concatenate BPE tokens into a single string
+            String bpeText = bpeTokensBuilder.toString();
+
+            // Step 3: Map Unicode characters back to bytes
+            List<Byte> byteList = new ArrayList<>();
+            for (int i = 0; i < bpeText.length(); i++) {
+                String s = String.valueOf(bpeText.charAt(i));
+                Integer byteValue = byteDecoder.get(s);
+                if (byteValue == null) {
+                    System.err.println("Warning: Character '" + s + "' not found in byteDecoder.");
+                    continue; // Skip unknown characters
+                }
+                byteList.add(byteValue.byteValue());
+            }
+
+            // Step 4: Convert byte array to string using UTF-8 encoding
+            byte[] byteArray = new byte[byteList.size()];
+            for (int i = 0; i < byteList.size(); i++) {
+                byteArray[i] = byteList.get(i);
+            }
+            String text = new String(byteArray, StandardCharsets.UTF_8);
+
+            return text;
         }
     }
     private static int indexOf(String[] array, String element, int startIndex) {
